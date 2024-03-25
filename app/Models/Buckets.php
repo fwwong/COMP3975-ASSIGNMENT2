@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Buckets extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'TransactionType',
+        'Company',
+    ];
 }
