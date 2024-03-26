@@ -33,7 +33,6 @@ class TransactionsController extends Controller
      */
     public function store(Request $request)
     {
-        DB::statement('PRAGMA foreign_keys=off;');
         try {
             // Validate incoming request data
             $validatedData = $request->validate([
@@ -46,6 +45,10 @@ class TransactionsController extends Controller
 
             $bucket = Buckets::whereRaw("substr(Company, 1, instr(Company || ' ', ' ') - 1) = ?", [$companyName])->first();
             $transactionType = $bucket ? $bucket->TransactionType : 'Undetermined';
+
+            if ($transactionType == 'Undetermined') {
+                DB::statement('PRAGMA foreign_keys=off;');
+            }
 
             // Calculate new net value
             $lastNetValue = Transactions::max('NetTotal');
@@ -107,7 +110,6 @@ class TransactionsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        DB::statement('PRAGMA foreign_keys=off;');
         try {
             // Validate incoming request data
             $validatedData = $request->validate([
@@ -120,6 +122,10 @@ class TransactionsController extends Controller
 
             $bucket = Buckets::whereRaw("substr(Company, 1, instr(Company || ' ', ' ') - 1) = ?", [$companyName])->first();
             $validatedData['TransactionType'] = $bucket ? $bucket->TransactionType : 'Undetermined';
+
+            if ($validatedData['TransactionType'] == 'Undetermined') {
+                DB::statement('PRAGMA foreign_keys=off;');
+            }
 
             // Calculate new net value
             $lastNetValue = Transactions::max('NetTotal');

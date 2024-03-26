@@ -20,9 +20,6 @@ return new class extends Migration
             $table->double('NetTotal');
             $table->string('TransactionType', 50);
             $table->timestamps();
-
-            // Add foreign key constraint
-            $table->foreign('TransactionType')->references('TransactionType')->on('buckets');
         });
     }
 
