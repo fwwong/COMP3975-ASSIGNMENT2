@@ -28,12 +28,12 @@
                             value="{{ old('Expense') }}" />
                     </div>
 
-                    <div class="form-group">
+                    {{-- <div class="form-group">
                         <label for="Category" class="control-label">Category</label>
                         <select class="form-control" name="Category" id="Category">
                             <option value="Undetermined">Undetermined</option>
                         </select>
-                    </div>
+                    </div> --}}
 
                     <div class="form-group">
                         <button type="submit" class="btn btn-success">Create</button>

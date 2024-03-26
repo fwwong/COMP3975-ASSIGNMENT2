@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Transactions;
+use App\Models\Buckets;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\DB;
@@ -38,9 +39,13 @@ class TransactionsController extends Controller
             $validatedData = $request->validate([
                 'TName' => 'required|string',
                 'Revenue' => 'required|numeric',
-                'Expense' => 'required|numeric',
-                'Category' => 'required|string',
+                'Expense' => 'required|numeric'
             ]);
+
+            $companyName = strtok($validatedData['TName'], ' '); // Get the first word from TransactionName
+
+            $bucket = Buckets::whereRaw("substr(Company, 1, instr(Company || ' ', ' ') - 1) = ?", [$companyName])->first();
+            $transactionType = $bucket ? $bucket->TransactionType : 'Undetermined';
 
             // Calculate new net value
             $lastNetValue = Transactions::max('NetTotal');
@@ -57,7 +62,7 @@ class TransactionsController extends Controller
             Transactions::create([
                 'Date' => $date,
                 'TransactionName' => $validatedData['TName'],
-                'TransactionType' => $validatedData['Category'],
+                'TransactionType' => $transactionType,
                 'NetTotal' => $newNetValue,
                 // Assign the value to either "Expense" or "Revenue" based on the transaction type
                 'Revenue' => $validatedData['Revenue'], // Assign the value for "Revenue"
