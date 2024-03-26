@@ -107,24 +107,47 @@ class TransactionsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Validate incoming request data
-        $validatedData = $request->validate([
-            'Date' => 'required|date',
-            'TransactionName' => 'required|string|max:100',
-            'Expense' => 'required|numeric',
-            'Revenue' => 'required|numeric',
-            'NetTotal' => 'required|numeric',
-            'TransactionType' => 'required|string|max:50',
-        ]);
+        DB::statement('PRAGMA foreign_keys=off;');
+        try {
+            // Validate incoming request data
+            $validatedData = $request->validate([
+                'TName' => 'required|string|max:100',
+                'Expense' => 'required|numeric',
+                'Revenue' => 'required|numeric'
+            ]);
 
-        // Retrieve the transaction with the given ID
-        $transaction = Transactions::findOrFail($id);
+            $companyName = strtok($validatedData['TName'], ' '); // Get the first word from TransactionName
 
-        // Update the transaction with validated data
-        $transaction->update($validatedData);
+            $bucket = Buckets::whereRaw("substr(Company, 1, instr(Company || ' ', ' ') - 1) = ?", [$companyName])->first();
+            $validatedData['TransactionType'] = $bucket ? $bucket->TransactionType : 'Undetermined';
 
-        // Redirect the user after updating the transaction
-        return redirect()->route('client.show', $transaction->id)->with('success', 'Transaction updated successfully.');
+            // Calculate new net value
+            $lastNetValue = Transactions::max('NetTotal');
+
+
+            $validatedData['NetTotal'] = $lastNetValue + $validatedData['Revenue'] - $validatedData['Expense'];
+
+            // Retrieve the transaction with the given ID
+            $transaction = Transactions::findOrFail($id);
+
+            // Update the transaction with validated data
+            $transaction->update([
+                'TransactionName' => $validatedData['TName'],
+                'Revenue' => $validatedData['Revenue'],
+                'Expense' => $validatedData['Expense'],
+                'TransactionType' => $validatedData['TransactionType'],
+                'NetTotal' => $validatedData['NetTotal'],
+            ]);
+
+            DB::statement('PRAGMA foreign_keys=on;');
+
+            // Redirect the user after updating the transaction
+            return redirect()->route('client.show', $transaction->id)->with('success', 'Transaction updated successfully.');
+        } catch (ValidationException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     /**
@@ -132,12 +155,15 @@ class TransactionsController extends Controller
      */
     public function destroy($id)
     {
+        DB::statement('PRAGMA foreign_keys=off;');
         // find the student
         $transaction = Transactions::find($id);
         // delete the student
         $transaction->delete();
+        DB::statement('PRAGMA foreign_keys=on;');
+
         // redirect to students list page
-        return redirect()->route('client.client')
-            ->with('success', 'Student deleted successfully');
+        return redirect()->route('client.index')
+            ->with('success', 'Transaction deleted successfully');
     }
 }
