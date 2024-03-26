@@ -43,4 +43,6 @@
         @endforeach
     </table>
     {{ $transactions->links() }}
+
+    @include('components.report')
 @endsection
