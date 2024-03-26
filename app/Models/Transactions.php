@@ -10,11 +10,11 @@ class Transactions extends Model
     use HasFactory;
 
     protected $fillable = [
-        'date',
+        'Date',
         'TransactionName',
         'TransactionType',
         'Expense',
         'Revenue',
-        'NetTotal',
+        'NetTotal'
     ];
 }

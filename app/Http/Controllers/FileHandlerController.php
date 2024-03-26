@@ -45,7 +45,7 @@ class FileHandlerController extends Controller
 
                             // Insert data into the Transactions table
                             Transactions::create([
-                                'date' => $data[0],
+                                'Date' => $data[0],
                                 'TransactionName' => $data[1],
                                 'TransactionType' => $transactionType,
                                 'Expense' => $data[2],
