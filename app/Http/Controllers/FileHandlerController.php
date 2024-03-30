@@ -63,6 +63,13 @@ class FileHandlerController extends Controller
                     DB::statement('PRAGMA foreign_keys=on;');
                 }
 
+                // Move the uploaded file to the destination directory with the new filename
+                $originalFilename = $request->file('csv_file')->getClientOriginalName();
+                $newFilename = $originalFilename . '.imported';
+                $destinationDirectory = 'files/';
+                $request->file('csv_file')->move($destinationDirectory, $newFilename);
+
+
                 // Redirect back with success message
                 $message = "Data insertion successful";
                 return redirect()->back()->with('success', $message);

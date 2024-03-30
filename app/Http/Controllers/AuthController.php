@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
@@ -14,10 +15,18 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
+            $role = $user->role;
 
             if ($user->verified == 1) {
-                // User is verified, continue with login
-                return redirect()->intended('/dashboard');
+                $role = $user->role;
+                Session::put('role', $role);
+
+                if ($role == 'admin') {
+                    // if user is admin, redirect to admin dashboard
+                    return redirect()->intended('/dashboard');
+                } else {
+                    return redirect()->intended('/client');
+                }
             } else {
                 // User is not verified, show message
                 return redirect()->route('login')->withInput()->with('error', 'Please wait for your account to be verified.');
@@ -33,15 +42,29 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-    
+        Session::forget('role');
         return redirect()->route('login')->with('success', 'You have been logged out.');
     }
-    
+
     public function index()
     {
         $users = User::all();
-        // Debugging
-         dd($users); // Use dd() to dump and die to see the data
-        return view('auth.controls', ['users' => $users]);
+        return view('auth.dashboard', compact('users'));
+    }
+
+    public function updateVerification(Request $request, $userId)
+    {
+        $user = User::findOrFail($userId);
+
+        // Validate the request
+        $request->validate([
+            'verified' => 'required|boolean',
+        ]);
+
+        // Update the user's verification status
+        $user->verified = $request->input('verified');
+        $user->save();
+
+        return redirect()->back()->with('success', 'User verification status updated successfully.');
     }
 }

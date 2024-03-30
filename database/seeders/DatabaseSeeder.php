@@ -24,6 +24,8 @@ class DatabaseSeeder extends Seeder
             'verified' => True
         ]);
 
+        
+
 
         $this->call(BucketsSeeder::class);
     }

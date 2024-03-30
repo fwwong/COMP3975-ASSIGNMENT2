@@ -9,23 +9,22 @@ use App\Http\Controllers\AuthController;
 
 Route::get('/', function () {
     return view('welcome');
-}) ->name('login');
+})->name('login');
 
 Route::get('/register', function () {
     return view('newaccount');
-}) ->name('register');
+})->name('register');
 
 Route::get('/login', function () {
     return view('welcome');
-}) ->name('login');
+})->name('login');
 
-Route::get('/dashboard', function () {
-    return view('auth/dashboard');
-}) ->name('dashboard');
 
-Route::get('/controls', function(){
-    return view('auth/controls');
-})->name('auth/controls');
+Route::get('/dashboard', [AuthController::class, 'index'])->name('auth.dashboard');
+
+//chenge user verification request 
+Route::post('/update-verification/{userId}', [AuthController::class, 'updateVerification'])->name('updateVerification');
+
 
 // this is the start of client routes
 Route::get('/client', [TransactionsController::class, 'index'])->name('client.index');
