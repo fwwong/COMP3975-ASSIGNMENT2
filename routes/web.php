@@ -23,6 +23,10 @@ Route::get('/dashboard', function () {
     return view('auth/dashboard');
 }) ->name('dashboard');
 
+Route::get('/controls', function(){
+    return view('auth/controls');
+})->name('auth/controls');
+
 // this is the start of client routes
 Route::get('/client', [TransactionsController::class, 'index'])->name('client.index');
 Route::get('client/create', [TransactionsController::class, 'create'])->name('client.create');
@@ -32,6 +36,7 @@ Route::get('client/edit/{id}', [TransactionsController::class, 'edit'])->name('c
 Route::put('client/update/{id}', [TransactionsController::class, 'update'])->name('client.update');
 Route::get('client/destroy/{id}', [TransactionsController::class, 'destroy'])->name('client.destroy');
 Route::get('/register', [RegisterController::class, 'showRegistrationForm']);
+
 
 Route::post('/client', [FileHandlerController::class, 'handleFileUpload'])->name('handle.file.upload');
 Route::post('/register', [RegisterController::class, 'register']);

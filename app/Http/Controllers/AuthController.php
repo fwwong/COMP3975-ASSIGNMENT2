@@ -20,7 +20,7 @@ class AuthController extends Controller
                 return redirect()->intended('/dashboard');
             } else {
                 // User is not verified, show message
-                return redirect()->route('login')->withInput()->with('error', 'Please verify your email to login.');
+                return redirect()->route('login')->withInput()->with('error', 'Please wait for your account to be verified.');
             }
         }
 
