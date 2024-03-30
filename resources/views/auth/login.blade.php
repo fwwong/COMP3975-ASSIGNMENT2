@@ -1,6 +1,7 @@
 
 
 <div class="p-5 m-5">
+<h1 class="text-center">Login</h1> 
     <form>
       <div class="mb-3">
         <label for="email" class="form-label">Email address</label>
