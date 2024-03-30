@@ -5,16 +5,16 @@
       <div class="card-header ">
         <ul class="nav nav-pills card-header-pills justify-content-center">
           <li class="nav-item">
-            <a class="nav-link active" href="/login">LOGIN</a>
+            <a class="nav-link" href="/login">LOGIN</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/register">NEW ACCOUNT</a>
+            <a class="nav-link active" href="/register">NEW ACCOUNT</a>
           </li>
         </ul>
       </div>
       <div class="card-body text-start">
-        <!-- login form  -->
-        @include('/auth/login')
+        <!-- register form  -->
+        @include('/auth/register')
       </div>
     </div>
 </div>

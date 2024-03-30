@@ -4,10 +4,19 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FileHandlerController;
 use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\BucketsController;
+use App\Http\Controllers\RegisterController;
 
 Route::get('/', function () {
     return view('welcome');
-});
+}) ->name('login');
+
+Route::get('/register', function () {
+    return view('newaccount');
+}) ->name('register');
+
+Route::get('/login', function () {
+    return view('welcome');
+}) ->name('login');
 
 // this is the start of client routes
 Route::get('/client', [TransactionsController::class, 'index'])->name('client.index');
@@ -17,8 +26,13 @@ Route::get('client/show/{id}', [TransactionsController::class, 'show'])->name('c
 Route::get('client/edit/{id}', [TransactionsController::class, 'edit'])->name('client.edit');
 Route::put('client/update/{id}', [TransactionsController::class, 'update'])->name('client.update');
 Route::get('client/destroy/{id}', [TransactionsController::class, 'destroy'])->name('client.destroy');
+Route::get('/register', [RegisterController::class, 'showRegistrationForm']);
+
 
 Route::post('/client', [FileHandlerController::class, 'handleFileUpload'])->name('handle.file.upload');
+Route::post('/register', [RegisterController::class, 'register']);
+
+
 
 // this is the start of the buckets routes for admin user
 Route::get('/buckets', [BucketsController::class, 'index'])->name('buckets.index');
