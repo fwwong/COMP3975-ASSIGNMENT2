@@ -5,6 +5,7 @@ use App\Http\Controllers\FileHandlerController;
 use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\BucketsController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\AuthController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -18,6 +19,10 @@ Route::get('/login', function () {
     return view('welcome');
 }) ->name('login');
 
+Route::get('/dashboard', function () {
+    return view('auth/dashboard');
+}) ->name('dashboard');
+
 // this is the start of client routes
 Route::get('/client', [TransactionsController::class, 'index'])->name('client.index');
 Route::get('client/create', [TransactionsController::class, 'create'])->name('client.create');
@@ -28,9 +33,10 @@ Route::put('client/update/{id}', [TransactionsController::class, 'update'])->nam
 Route::get('client/destroy/{id}', [TransactionsController::class, 'destroy'])->name('client.destroy');
 Route::get('/register', [RegisterController::class, 'showRegistrationForm']);
 
-
 Route::post('/client', [FileHandlerController::class, 'handleFileUpload'])->name('handle.file.upload');
 Route::post('/register', [RegisterController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
 
