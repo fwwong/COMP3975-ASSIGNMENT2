@@ -37,4 +37,11 @@ class AuthController extends Controller
         return redirect()->route('login')->with('success', 'You have been logged out.');
     }
     
+    public function index()
+    {
+        $users = User::all();
+        // Debugging
+         dd($users); // Use dd() to dump and die to see the data
+        return view('auth.controls', ['users' => $users]);
+    }
 }

@@ -36,6 +36,11 @@ Route::get('client/edit/{id}', [TransactionsController::class, 'edit'])->name('c
 Route::put('client/update/{id}', [TransactionsController::class, 'update'])->name('client.update');
 Route::get('client/destroy/{id}', [TransactionsController::class, 'destroy'])->name('client.destroy');
 Route::get('/register', [RegisterController::class, 'showRegistrationForm']);
+Route::get('/auth/controls', [AuthController::class, 'index'])->name('auth.controls');
+Route::post('/controls', [FileHandlerController::class, 'handleFileUpload'])->name('handle.file.upload');
+
+
+
 
 
 Route::post('/client', [FileHandlerController::class, 'handleFileUpload'])->name('handle.file.upload');
