@@ -1,5 +1,6 @@
 @extends('layouts.master')
 @section('content')
+
     @if (session('role'))
         @php
             $role = session('role');
@@ -16,7 +17,8 @@
             </script>
         @endif
     @endif
-    
+
+
     <div class="container p-5">
         <div class="card text-center">
             <div class="card-header ">

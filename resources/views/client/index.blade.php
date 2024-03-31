@@ -1,5 +1,22 @@
 @extends('layouts.master')
 @section('title', 'Transactions List')
+
+@if (session('role'))
+    @php
+        $role = session('role');
+    @endphp
+    @if ($role == 'admin')
+        <!-- Redirect to admin dashboard -->
+        <script>
+            window.location = "{{ route('auth.dashboard') }}";
+        </script>
+    @endif
+@else
+    <script>
+        window.location = "{{ route('login') }}";
+    </script>
+@endif
+
 @section('content')
     <div class="row">
         <div class="col-lg-12">

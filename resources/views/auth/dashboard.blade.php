@@ -1,5 +1,21 @@
 @extends('layouts.master')
 @section('content')
+
+    @if (session('role'))
+        @php
+            $role = session('role');
+        @endphp
+        @if($role == 'user')
+            <!-- Redirect to user dashboard -->
+            <script>
+                window.location = "{{ route('client.index') }}";
+            </script>
+        @endif
+    @else
+        <script>
+            window.location = "{{ route('login') }}";
+        </script>
+    @endif
     <div class="container p-5">
         <div class="card text-center">
             <div class="card-header">
@@ -22,12 +38,6 @@
                             @include('auth.controls', ['users' => $users])
                         </div>
                     @endif
-                    <div class="d-flex justify-content-center">
-                        <form action="{{ route('logout') }}" method="POST">
-                            @csrf
-                            <button type="submit" class="btn btn-danger mt-3">LOGOUT</button>
-                        </form>
-                    </div>
                 @else
                     <div>
                         <p class="card-text">Please log in to access this page.</p>

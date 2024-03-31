@@ -45,7 +45,7 @@ Route::post('/controls', [FileHandlerController::class, 'handleFileUpload'])->na
 Route::post('/client', [FileHandlerController::class, 'handleFileUpload'])->name('handle.file.upload');
 Route::post('/register', [RegisterController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
 

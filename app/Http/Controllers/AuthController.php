@@ -23,14 +23,15 @@ class AuthController extends Controller
 
                 if ($role == 'admin') {
                     // if user is admin, redirect to admin dashboard
-                    return redirect()->intended('/dashboard');
+                    return redirect()->route('auth.dashboard');
                 } else {
-                    return redirect()->intended('/client');
+                    return redirect()->route('client.index');
                 }
             } else {
                 // User is not verified, show message
                 return redirect()->route('login')->withInput()->with('error', 'Please wait for your account to be verified.');
             }
+        
         }
 
         // User not found or invalid credentials
@@ -45,6 +46,8 @@ class AuthController extends Controller
         Session::forget('role');
         return redirect()->route('login')->with('success', 'You have been logged out.');
     }
+
+    
 
     public function index()
     {

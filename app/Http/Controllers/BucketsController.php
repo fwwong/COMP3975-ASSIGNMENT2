@@ -36,10 +36,23 @@ class BucketsController extends Controller
         ]);
 
         $bucket = Buckets::create($request->all());
-        // Update transactions with matching company names
-        $transactionsToUpdate = Transactions::where('TransactionType', $bucket->Company)->get();
-        foreach ($transactionsToUpdate as $transaction) {
-            $transaction->update(['TransactionType' => $bucket->TransactionType]);
+        // Update all TransactionType values to 'undetermined'
+        Transactions::query()->update(['TransactionType' => 'undetermined']);
+
+        // Get all buckets
+        $buckets = Buckets::all();
+
+        foreach ($buckets as $bucket) {
+            // Update transactions with matching company names
+            $companyName = strtok($bucket['Company'], ' '); // Get the first word from TransactionName
+            $transactionsToUpdate = Transactions::whereRaw("substr(TransactionName, 1, instr(TransactionName || ' ', ' ') - 1) = ?", [$companyName])->get();
+
+            if ($transactionsToUpdate) {
+                // Update the TransactionType for the single transaction
+                foreach ($transactionsToUpdate as $transaction) {
+                    $transaction->update(['TransactionType' => $bucket->TransactionType]);
+                }
+            }
         }
         return redirect()->route('buckets.index')->with('success', 'Bucket created successfully.');
     }
@@ -81,6 +94,14 @@ class BucketsController extends Controller
             'TransactionType' => $request->TransactionType,
             'Company' => $request->Company,
         ]);
+        $companyName = strtok($bucket['Company'], ' '); // Get the first word from TransactionName
+        $transactionsToUpdate = Transactions::whereRaw("substr(TransactionName, 1, instr(TransactionName || ' ', ' ') - 1) = ?", [$companyName])->get();
+        if ($transactionsToUpdate) {
+            // Update the TransactionType for the single transaction
+            foreach ($transactionsToUpdate as $transaction) {
+                $transaction->update(['TransactionType' => $bucket->TransactionType]);
+            }
+        }
         return redirect()->route('buckets.index')->with('success', 'Bucket updated successfully.');
     }
 
@@ -91,6 +112,15 @@ class BucketsController extends Controller
     {
         $bucket = Buckets::findOrFail($id);
         $bucket->delete();
+        // Update transactions with matching company names
+        $companyName = strtok($bucket['Company'], ' '); // Get the first word from TransactionName
+        $transactionsToUpdate = Transactions::whereRaw("substr(TransactionName, 1, instr(TransactionName || ' ', ' ') - 1) = ?", [$companyName])->get();
+        if ($transactionsToUpdate) {
+            // Update the TransactionType for the single transaction
+            foreach ($transactionsToUpdate as $transaction) {
+                $transaction->update(['TransactionType' => 'undetermined']);
+            }
+        }
         return redirect()->route('buckets.index')->with('success', 'Bucket deleted successfully.');
     }
 }

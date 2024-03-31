@@ -20,6 +20,10 @@
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            @if (Auth::check())
+                <a href="{{ route('logout') }}" class="btn btn-danger mt-3">LOGOUT</a>
+            @endif
+
     </nav>
 
     <!-- CONTENT -->
@@ -46,6 +50,8 @@
         @endif
         @yield('content')
     </div>
+
+
 
     <!-- FOOTER -->
     <footer class="footer mt-auto py-3 bg-dark text-light">

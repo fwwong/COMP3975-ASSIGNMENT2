@@ -2,6 +2,22 @@
 
 @section('title', 'Create Transaction')
 
+@if (session('role'))
+    @php
+        $role = session('role');
+    @endphp
+    @if ($role == 'admin')
+        <!-- Redirect to admin dashboard -->
+        <script>
+            window.location = "{{ route('auth.dashboard') }}";
+        </script>
+    @endif
+@else
+    <script>
+        window.location = "{{ route('login') }}";
+    </script>
+@endif
+
 @section('content')
     <div class="container">
         <h1>Create Transaction</h1>

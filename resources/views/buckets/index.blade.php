@@ -2,6 +2,22 @@
 
 @section('title', 'Buckets List')
 
+@if (session('role'))
+    @php
+        $role = session('role');
+    @endphp
+    @if ($role == 'user')
+        <!-- Redirect to user dashboard -->
+        <script>
+            window.location = "{{ route('client.index') }}";
+        </script>
+    @endif
+@else
+    <script>
+        window.location = "{{ route('login') }}";
+    </script>
+@endif
+
 @section('content')
     <div class="container">
         <h1>Buckets List</h1>
